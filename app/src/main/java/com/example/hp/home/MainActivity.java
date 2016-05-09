@@ -25,7 +25,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity
        implements NavigationView.OnNavigationItemSelectedListener{
-  DatabaseHelper myDb;
+ 
  private List<MovieModel> movieList=new ArrayList<>();
     private RecyclerView recyclerView;
     private MyAdapter mAdapter;
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 MainActivity.this.startActivity(intent);
             }
         });
@@ -57,10 +57,12 @@ public class MainActivity extends AppCompatActivity
         MovieModel movieModel=new MovieModel();
         movieModel.setMovie("Devdas");
         movieModel.setYear("2002");
+        movieModel.setImagepath("https://upload.wikimedia.org/wikipedia/en/6/6d/Devdas.jpg");
         movieList.add(movieModel);
         MovieModel movie2=new MovieModel();
         movie2.setMovie("Fanaa");
         movie2.setYear("2004");
+        movie2.setImagepath("https://upload.wikimedia.org/wikipedia/en/6/6d/Devdas.jpg");
         movieList.add(movie2);
 
         mAdapter=new MyAdapter(movieList);

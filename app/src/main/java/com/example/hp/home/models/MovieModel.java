@@ -6,7 +6,7 @@ package com.example.hp.home.models;
 public class MovieModel {
     private String movie;
     private String year;
-
+    private String imagepath;
 
     public String getMovie() {
         return movie;
@@ -25,4 +25,11 @@ public class MovieModel {
     }
 
 
+    public String getImagepath() {
+        return imagepath;
+    }
+
+    public void setImagepath(String imagepath) {
+        this.imagepath = imagepath;
+    }
 }

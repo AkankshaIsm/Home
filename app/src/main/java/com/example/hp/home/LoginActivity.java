@@ -4,47 +4,40 @@ import android.app.AlertDialog;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import static android.support.design.widget.Snackbar.*;
-
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 /**
  * Created by hp on 08-05-2016.
  */
 public class LoginActivity extends AppCompatActivity {
     DatabaseHelper myDb;
-    EditText ename;
-    EditText eemail;
-    EditText epassword;
-    EditText eid;
-    FloatingActionButton button;
-    FloatingActionButton viewbutton;
-    FloatingActionButton updatebutton;
-    FloatingActionButton deletebutton;
+
+    @InjectView(R.id.eid)EditText eid;
+    @InjectView(R.id.ename)EditText ename;
+    @InjectView(R.id.eemail)EditText eemail;
+    @InjectView(R.id.epassword)EditText epassword;
+    @InjectView(R.id.fabadd)FloatingActionButton button;
+    @InjectView(R.id.fabview)FloatingActionButton viewbutton;
+    @InjectView(R.id.fabupdate)FloatingActionButton updatebutton;
+    @InjectView(R.id.fabdelete)FloatingActionButton deletebutton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sqlfile);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
+        ButterKnife.inject(this);
+
 
 
         myDb= new DatabaseHelper(this);
-        eid = (EditText)findViewById(R.id.eid);
-        ename=(EditText)findViewById(R.id.ename);
-        eemail=(EditText)findViewById(R.id.eemail);
-        epassword=(EditText)findViewById(R.id.epassword);
-        button=(FloatingActionButton)findViewById(R.id.fabadd);
-        viewbutton=(FloatingActionButton)findViewById(R.id.fabview);
-        updatebutton = (FloatingActionButton)findViewById(R.id.fabupdate);
-        deletebutton = (FloatingActionButton)findViewById(R.id.fabdelete);
+
         addData();
         showAllData();
         updateData();
