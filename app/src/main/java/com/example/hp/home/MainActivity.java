@@ -1,13 +1,16 @@
 package com.example.hp.home;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,30 +20,54 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.example.hp.home.models.Example;
 import com.example.hp.home.models.MovieModel;
+
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import butterknife.InjectView;
+import butterknife.ButterKnife;
+
+import static android.widget.AdapterView.*;
 
 public class MainActivity extends AppCompatActivity
-       implements NavigationView.OnNavigationItemSelectedListener{
- 
- private List<MovieModel> movieList=new ArrayList<>();
-    private RecyclerView recyclerView;
-    private MyAdapter mAdapter;
+       implements NavigationView.OnNavigationItemSelectedListener,OnItemSelectedListener{
+
+    public static final String rootURL="http://api.themoviedb.org/3/movie/"; //base url for movies
+    private static final String imageURL="https://image.tmdb.org/t/p/w780"; //base url for for images
+
+    private List<MovieModel> movieModelList;
+    private int pos;
+    @InjectView(R.id.recyclerView)RecyclerView recyclerView;
+    @InjectView(R.id.spinner)Spinner spinner;
+    @InjectView(R.id.nav_view) NavigationView navigationView;
+    @InjectView(R.id.fab) FloatingActionButton fab;
+    @InjectView(R.id.drawer_layout) DrawerLayout drawer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ButterKnife.inject(this);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-       NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -49,33 +76,38 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-        MovieModel movieModel=new MovieModel();
-        movieModel.setMovie("Devdas");
-        movieModel.setYear("2002");
-        movieModel.setImagepath("https://upload.wikimedia.org/wikipedia/en/6/6d/Devdas.jpg");
-        movieList.add(movieModel);
-        MovieModel movie2=new MovieModel();
-        movie2.setMovie("Fanaa");
-        movie2.setYear("2004");
-        movie2.setImagepath("https://upload.wikimedia.org/wikipedia/en/6/6d/Devdas.jpg");
-        movieList.add(movie2);
+        Log.e("Error", "in oncreate");
+        getMovies();
 
-        mAdapter=new MyAdapter(movieList);
-        recyclerView=(RecyclerView)findViewById(R.id.recyclerView);
-        RecyclerView.LayoutManager mLayoutManager=new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
+        spinner.setOnItemSelectedListener(MainActivity.this);
+        List<String> categories = new ArrayList<String>();
+        categories.add("Title");
+        categories.add("Rating");
+        categories.add("Year");
+
+        // Creating adapter for spinner
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+
+        //set drop down view for list of categories
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        spinner.setAdapter(dataAdapter);
+
+        //recyclerView.setAdapter(mAdapter);
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                MovieModel movieModel = movieList.get(position);
-                Toast.makeText(getApplicationContext(), movieModel.getMovie().toString(), Toast.LENGTH_LONG).show();
+                MovieModel movieModel = movieModelList.get(position);
+                Intent intent = new Intent(MainActivity.this,AboutMovie.class);
+                intent.putExtra("MyKey", movieModel);
+                startActivity(intent);
+
             }
 
             @Override
@@ -83,6 +115,8 @@ public class MainActivity extends AppCompatActivity
 
             }
         }));
+
+
 
     }
 
@@ -144,6 +178,73 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    private void getMovies()
+    {
+        //While the app fetched data we are displaying a progress dialog
+        final ProgressDialog loading = new ProgressDialog(MainActivity.this,R.style.AppTheme_AppBarOverlay);
+        loading.setIndeterminate(true);
+        loading.setMessage("Fetching Data");
+        loading.show();
+
+        //Creating a rest adapter
+        RestAdapter adapter = new RestAdapter.Builder().setEndpoint(rootURL).build();
+        MovieAPI api=adapter.create(MovieAPI.class);
+        api.getMovies(new Callback<Example>() {
+
+            @Override
+            public void success(Example movieModels, Response response)
+            {
+                  loading.dismiss();  //if successful in fetching the json, stop the progress dialog
+                  movieModelList=movieModels.getResults(); //get movie model object
+
+                switch(pos)
+                {
+                    case 0:Collections.sort(movieModelList, MovieModel.titleComparator);
+                           break;
+                    case 1:Collections.sort(movieModelList,MovieModel.ratingComparator);
+                           break;
+                    case 2:Collections.sort(movieModelList,MovieModel.dateComparator);
+                           break;
+
+                }
+                   showList();
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                //unable to fetch json from server
+                loading.dismiss();
+                Toast.makeText(MainActivity.this, "Unable to fetch data", Toast.LENGTH_SHORT).show();
+                Log.e("error retro", error.toString());
+            }
+        });
+
+    }
+
+    private void showList()
+    {
+        MyAdapter myAdapter=new MyAdapter(movieModelList,imageURL);
+
+        RecyclerView.LayoutManager mLayoutManager=new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        Log.e("Error", "showlist");
+        recyclerView.setAdapter(myAdapter);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        pos=position;
+        getMovies();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+   getMovies();
+    }
+
 
 
 }

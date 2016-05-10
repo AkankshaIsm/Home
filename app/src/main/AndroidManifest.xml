@@ -21,7 +21,17 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/login_name"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".AboutMovie"
+            android:label="@string/movie_name"
+            android:theme="@style/AppTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

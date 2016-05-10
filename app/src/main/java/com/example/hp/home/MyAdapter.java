@@ -21,21 +21,26 @@ import butterknife.InjectView;
  */
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
     private List<MovieModel> movieModelList;
+    private String imageURL;
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
         @InjectView(R.id.movie)TextView movie;
         @InjectView(R.id.year)TextView year;
+        @InjectView(R.id.rating)TextView rating;
         @InjectView(R.id.image)ImageView image;
+
         public MyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.inject(this,itemView);
 
         }
     }
-    public MyAdapter(List<MovieModel> movieModelList)
+    public MyAdapter(List<MovieModel> movieModelList,String imageURL)
     {
-    this.movieModelList=movieModelList;
+      this.movieModelList=movieModelList;
+      this.imageURL=imageURL;
     }
+
     @Override
     public MyAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.row,parent,false);
@@ -45,10 +50,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
 
     @Override
     public void onBindViewHolder(MyAdapter.MyViewHolder holder, int position) {
-   MovieModel movieModel=movieModelList.get(position);
-       holder.movie.setText(movieModel.getMovie());
-        holder.year.setText(movieModel.getYear());
-        Uri uri = Uri.parse(movieModel.getImagepath());
+        MovieModel movieModel=movieModelList.get(position);
+        holder.movie.setText(movieModel.getTitle());
+        holder.year.setText(movieModel.getReleaseDate());
+        holder.rating.setText(movieModel.getVoteAverage().toString());
+        Uri uri = Uri.parse(imageURL+movieModel.getPosterPath());
         Context context = holder.image.getContext();
         Picasso.with(context).load(uri).into(holder.image);
     }
@@ -56,5 +62,5 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder>{
     @Override
     public int getItemCount() {
         return movieModelList.size();
-    }
+    }  //returns 0 if no item is fetched
 }

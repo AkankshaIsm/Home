@@ -4,5 +4,6 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="login_name">Login</string>
+    <string name="movie_name">My Movie</string>
     <string name="action_settings">Settings</string>
 </resources>

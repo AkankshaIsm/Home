@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/image1"
+    android:id="@+id/frame">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <TextView
+
+            android:text="Movie"
+            style="@style/MovieTextStyle"
+            android:id="@+id/movie"
+            />
+
+        <TextView
+
+            android:text="Overview"
+            style="@style/OverviewTextStyle"
+            android:id="@+id/overview"
+            />
+
+
+
+
+
+    </LinearLayout>
+    </FrameLayout>

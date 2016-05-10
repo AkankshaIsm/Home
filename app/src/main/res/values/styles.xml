@@ -13,5 +13,39 @@
     </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+     <style name="MovieTextStyle" parent="@android:style/TextAppearance.Large">
+         <item name="android:layout_height">wrap_content</item>
+         <item name="android:layout_width">fill_parent</item>
+         <item name="android:textColor">#00bbbb</item>
+         <item name="android:typeface">monospace</item>
+         <item name="android:textStyle">italic|bold</item>
+         <item name="android:padding">4dp</item>
+     </style>
+    <style name="DarkTextStyle" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textColor">#ffff</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:background">#03a9f4</item>
+        <item name="android:padding">2dp</item>
+    </style>
+    <style name="OverviewTextStyle" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:textStyle">italic</item>
+
+        <item name="android:padding">2dp</item>
+    </style>
+    <style name="SimpleTextStyle" parent="@android:style/TextAppearance.Small">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:background">#b6b6</item>
+        <item name="android:padding">1dp</item>
+    </style>
 
 </resources>
