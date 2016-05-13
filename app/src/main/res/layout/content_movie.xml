@@ -22,10 +22,11 @@
             style="@style/OverviewTextStyle"
             android:id="@+id/overview"
             />
-
-
-
-
+         <SurfaceView
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:id="@+id/myvideo"
+             android:layout_margin="4dp"/>
 
     </LinearLayout>
     </FrameLayout>

@@ -33,23 +33,27 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+
+
 import retrofit.Callback;
+
+import butterknife.InjectView;
+import butterknife.ButterKnife;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import butterknife.InjectView;
-import butterknife.ButterKnife;
+
 
 import static android.widget.AdapterView.*;
 
 public class MainActivity extends AppCompatActivity
        implements NavigationView.OnNavigationItemSelectedListener,OnItemSelectedListener{
 
-    public static final String rootURL="http://api.themoviedb.org/3/movie/"; //base url for movies
+    public static final String rootURL="http://api.themoviedb.org/3/movie/"; //base url for movies  always end with /
     private static final String imageURL="https://image.tmdb.org/t/p/w780"; //base url for for images
 
-    private List<MovieModel> movieModelList;
-    private int pos;
+    private List<MovieModel> movieModelList = null;
+    private int pos =0;
     @InjectView(R.id.recyclerView)RecyclerView recyclerView;
     @InjectView(R.id.spinner)Spinner spinner;
     @InjectView(R.id.nav_view) NavigationView navigationView;
@@ -82,7 +86,7 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         Log.e("Error", "in oncreate");
-        getMovies();
+
 
         spinner.setOnItemSelectedListener(MainActivity.this);
         List<String> categories = new ArrayList<String>();
@@ -116,7 +120,7 @@ public class MainActivity extends AppCompatActivity
             }
         }));
 
-
+        getPopular();
 
     }
 
@@ -179,7 +183,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void getMovies()
+    private void getPopular()
     {
         //While the app fetched data we are displaying a progress dialog
         final ProgressDialog loading = new ProgressDialog(MainActivity.this,R.style.AppTheme_AppBarOverlay);
@@ -187,29 +191,30 @@ public class MainActivity extends AppCompatActivity
         loading.setMessage("Fetching Data");
         loading.show();
 
-        //Creating a rest adapter
-        RestAdapter adapter = new RestAdapter.Builder().setEndpoint(rootURL).build();
+        RestAdapter adapter = new RestAdapter.Builder()
+                .setEndpoint(rootURL)
+                .build();
         MovieAPI api=adapter.create(MovieAPI.class);
-        api.getMovies(new Callback<Example>() {
+        api.getPopular(new Callback<Example>() {
 
             @Override
-            public void success(Example movieModels, Response response)
-            {
-                  loading.dismiss();  //if successful in fetching the json, stop the progress dialog
-                  movieModelList=movieModels.getResults(); //get movie model object
-
-                switch(pos)
-                {
-                    case 0:Collections.sort(movieModelList, MovieModel.titleComparator);
-                           break;
-                    case 1:Collections.sort(movieModelList,MovieModel.ratingComparator);
-                           break;
-                    case 2:Collections.sort(movieModelList,MovieModel.dateComparator);
-                           break;
+            public void success(Example movieModels, Response response) {  loading.dismiss();  //if successful in fetching the json, stop the progress dialog
+                movieModelList = movieModels.getResults(); //get movie model object
+                switch (pos) {
+                    case 0:
+                        Collections.sort(movieModelList, MovieModel.titleComparator);
+                        break;
+                    case 1:
+                        Collections.sort(movieModelList, MovieModel.ratingComparator);
+                        break;
+                    case 2:
+                        Collections.sort(movieModelList, MovieModel.dateComparator);
+                        break;
 
                 }
-                   showList();
 
+
+                showList();
             }
 
             @Override
@@ -217,10 +222,9 @@ public class MainActivity extends AppCompatActivity
                 //unable to fetch json from server
                 loading.dismiss();
                 Toast.makeText(MainActivity.this, "Unable to fetch data", Toast.LENGTH_SHORT).show();
-                Log.e("error retro", error.toString());
+                //Log.e("error retro",error.toString());
             }
         });
-
     }
 
     private void showList()
@@ -237,12 +241,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         pos=position;
-        getMovies();
+        getPopular();
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-   getMovies();
+   getPopular();
     }
 
 
