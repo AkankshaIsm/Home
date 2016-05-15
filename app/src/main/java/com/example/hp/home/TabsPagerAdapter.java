@@ -1,28 +1,45 @@
 package com.example.hp.home;
 
+import android.app.ProgressDialog;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.example.hp.home.models.Example;
+import com.example.hp.home.models.MovieModel;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by hp on 12-05-2016.
  */
 public class TabsPagerAdapter extends FragmentPagerAdapter {
     final int PAGE_COUNT = 3;
+    private List<MovieModel> movieModelList;
+    private String KEY = "MYKEY";
     private String tabTitles[] = {"Now Playing","Popular","Upcoming"};
+
+
     public TabsPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
-    @Override
+
     public Fragment getItem(int position) {
-//         switch (position) {
-//             case 0 :return PageFragment.newInstance("https://image.tmdb.org/t/p/w780/now_playing");
-//             case 1 :return PageFragment.newInstance("https://image.tmdb.org/t/p/w780/popular");
-//             case 2 :return PageFragment.newInstance("https://image.tmdb.org/t/p/w780/upcoming");
-//         }
-//        return PageFragment.newInstance("https://image.tmdb.org/t/p/w780/now_playing");
-        return null;
+        Log.e("sunnnnnn","tabspager m hu ");
+
+        return PageFragment.newInstance(position);
+
     }
 
     @Override
@@ -34,4 +51,6 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     {
         return tabTitles[position];
     }
+
+
 }

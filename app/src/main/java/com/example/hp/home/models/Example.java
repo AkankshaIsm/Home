@@ -1,5 +1,9 @@
 package com.example.hp.home.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.Expose;
@@ -10,7 +14,7 @@ import com.google.gson.annotations.SerializedName;
  */
 
 
-    public class Example {
+    public class Example{
 
         @SerializedName("page")
         @Expose
@@ -96,6 +100,7 @@ import com.google.gson.annotations.SerializedName;
         public void setTotalPages(Integer totalPages) {
             this.totalPages = totalPages;
         }
+
 
 
 }

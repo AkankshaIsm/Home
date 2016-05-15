@@ -96,15 +96,20 @@ public class AboutMovie extends AppCompatActivity implements SurfaceHolder.Callb
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-       mediaPlayer.start();
+       mp.start();
     }
     @Override
     protected void onPause() {
         super.onPause();
+        if(mediaPlayer!= null)
+            mediaPlayer.release();
+
     }
     @Override
     protected void onStop() {
         super.onStop();
+        if(mediaPlayer!= null)
+            mediaPlayer.release();
 
     }
     @Override

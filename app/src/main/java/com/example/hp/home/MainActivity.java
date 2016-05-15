@@ -47,7 +47,7 @@ import retrofit.client.Response;
 import static android.widget.AdapterView.*;
 
 public class MainActivity extends AppCompatActivity
-       implements NavigationView.OnNavigationItemSelectedListener,OnItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener,OnItemSelectedListener{
 
     public static final String rootURL="http://api.themoviedb.org/3/movie/"; //base url for movies  always end with /
     private static final String imageURL="https://image.tmdb.org/t/p/w780"; //base url for for images
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                Intent intent = new Intent(MainActivity.this, SwipeActivity.class);
                 MainActivity.this.startActivity(intent);
             }
         });
@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-  @SuppressWarnings("StatementWithEmptyBody")
+    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -199,6 +199,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void success(Example movieModels, Response response) {  loading.dismiss();  //if successful in fetching the json, stop the progress dialog
+                Log.e("In Main ","MainActivity.success");
                 movieModelList = movieModels.getResults(); //get movie model object
                 switch (pos) {
                     case 0:
@@ -246,7 +247,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-   getPopular();
+        getPopular();
     }
 
 
